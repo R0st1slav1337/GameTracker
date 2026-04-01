@@ -1,5 +1,5 @@
-# Movie Watchlist
+# Game Tracker
 
-Project short description: user logs in app, he can create personal watchlist, he adds movies to this list, he marks them as watched or not watched, then he gives rating to the movie and writes short review
+Project short description: user logs in app, he can search for games, see details about every game, add them to favorites, add games to played/playing/want to play list, leave own review on game 
 
 Group members: Krivenko Rostislav
