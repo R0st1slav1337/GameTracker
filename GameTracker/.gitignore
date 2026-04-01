@@ -2,7 +2,9 @@
 
 .vscode/
 node_modules/
+.angular/
 dist/
+
 # Compiled output
 /dist
 /tmp
