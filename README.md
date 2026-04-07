@@ -18,12 +18,18 @@
 
 ## Planed Features
 
+### Authentication
 * User registration
 * User login/logout
+
+### Game Library
 * Search for games from a large library of games, which will be extracted from the external API (rawg.io)
 * View details about every game
 * Add games to favorites
 * Add games to played/playing/want to play list, which will be seen in profile
+
+### Reviews
+* View reviews of games
 * Leave own review on game
 
 ## End Points (planned)
