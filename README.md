@@ -32,6 +32,11 @@
 * View reviews of games
 * Leave own review on game
 
+### Profile
+* Create and view profile with lists of games (favorites, played, playing, want to play)
+* Edit profile information
+* View others' profiles and their game lists and reviews
+
 ## End Points (planned)
 
 * POST   /api/auth/login/
@@ -43,12 +48,16 @@
 * POST   /api/games/
 * GET    /api/external/games/
 
-* GET    /api/my-library/
-* POST   /api/my-library/
-* PUT    /api/my-library/<id>/
-* DELETE /api/my-library/<id>/
+* GET    /api/library/
+* POST   /api/library/
+* PUT    /api/library/<id>/
+* DELETE /api/library/<id>/
 
 * GET    /api/reviews/?game=1
 * POST   /api/reviews/
 * PUT    /api/reviews/<id>/
 * DELETE /api/reviews/<id>/
+
+* GET    /api/profiles/<username>/
+* GET    /api/profiles/<username>/reviews/
+* GET    /api/profiles/<username>/library/
