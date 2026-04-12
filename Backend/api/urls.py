@@ -9,4 +9,6 @@ urlpatterns = [
 
     path('reviews/', ReviewListCreate.as_view()),
     path('reviews/<int:pk>/', ReviewDetail.as_view()),
+
+    path('profile/<str:username>/', get_profile),
 ]
