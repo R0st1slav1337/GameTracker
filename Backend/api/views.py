@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,6 +12,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Game, Review, Profile
 from .serializers import GameSerializer, ReviewSerializer, RegisterSerializer, ProfileSerializer
+from .utils import save_rawg_game
+from .rawg_service import search_rawg_games, get_rawg_game
 
 @api_view(['POST'])
 def login_view(request):
@@ -67,6 +69,55 @@ def games_list(request):
     serializer = GameSerializer(games, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def game_detail(request, pk):
+    try:
+        game = Game.objects.get(pk=pk)
+        serializer = GameSerializer(game)
+        return Response(serializer.data)
+    except Game.DoesNotExist:
+        return Response({'error': 'Game not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def rawg_search_view(request):
+    query = request.GET.get('search', '')
+    if not query:
+        return Response({'error': 'search parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        data = search_rawg_games(query)
+        simplified = []
+
+        for item in data.get("results", []):
+            simplified.append({
+                "id": item.get("id"),
+                "name": item.get("name"),
+                "released": item.get("released"),
+                "rating": item.get("rating"),
+                "image": item.get("background_image"),
+            })
+        return Response(simplified)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def rawg_game_detail_view(request, rawg_id):
+    try:
+        game = Game.objects.filter(rawg_id=rawg_id).first()
+
+        # Do not make request to rawg.io if game alreagy locally saved
+        if game:
+            return Response(GameSerializer(game).data)
+
+        data = get_rawg_game(rawg_id)
+        game = save_rawg_game(data)
+        return Response(GameSerializer(game).data)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class ReviewListCreate(APIView):
     permission_classes = [IsAuthenticated]
