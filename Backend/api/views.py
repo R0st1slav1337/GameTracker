@@ -15,6 +15,8 @@ from .serializers import GameSerializer, ReviewSerializer, RegisterSerializer, P
 from .utils import save_rawg_game
 from .rawg_service import search_rawg_games, get_rawg_game
 
+
+# Login user and return JWT tokens
 @api_view(['POST'])
 def login_view(request):
     serializer = LoginSerializer(data=request.data)
@@ -43,6 +45,7 @@ def login_view(request):
     )
 
 
+# Register new user
 @api_view(['POST'])
 def register_view(request):
     serializer = RegisterSerializer(data=request.data)
@@ -53,6 +56,7 @@ def register_view(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# Logout user by blacklisting refresh token
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -73,6 +77,7 @@ class LogoutView(APIView):
             )
 
 
+# Get list of games from local database.
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def games_list(request):
@@ -81,6 +86,7 @@ def games_list(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+# Get game details by id from local database.
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def game_detail(request, pk):
@@ -92,6 +98,7 @@ def game_detail(request, pk):
         return Response({'error': 'Game not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
+# Search games on rawg.io by query parameter "search". Return simplified game data list
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def rawg_search_view(request):
@@ -116,6 +123,7 @@ def rawg_search_view(request):
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 
+# Get game details by rawg.io id. If game is not in local database, get it from rawg.io and save to local database
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def rawg_game_detail_view(request, rawg_id):
@@ -133,6 +141,7 @@ def rawg_game_detail_view(request, rawg_id):
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+# Get list of reviews or add review to game
 class ReviewListCreate(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -150,6 +159,7 @@ class ReviewListCreate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# Get, update or delete specific review
 class ReviewDetail(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -189,8 +199,9 @@ class ReviewDetail(APIView):
             )
         review.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
 
+
+# Get public profile by username
 @api_view(['GET'])
 def get_profile(request, username):
     try:
@@ -207,6 +218,7 @@ def get_profile(request, username):
     return Response(serializer.data)
 
 
+# Get or update current user profile
 class MyProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -223,8 +235,9 @@ class MyProfileView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
+
+# Get list of games in user library or add game to library
 class LibraryListCreate(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -241,8 +254,9 @@ class LibraryListCreate(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
+
+# Get, update or delete specific library item
 class LibraryDetail(APIView):
     permission_classes = [IsAuthenticated]
 
