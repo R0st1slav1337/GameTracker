@@ -45,20 +45,20 @@
 * POST   /api/auth/logout/
 
 * GET    /api/games/
-* GET    /api/games/<id>/
+* GET    /api/games/1/
 * POST   /api/games/
 * GET    /api/external/games/
 
 * GET    /api/library/
 * POST   /api/library/
-* PUT    /api/library/<id>/
-* DELETE /api/library/<id>/
+* PUT    /api/library/1/
+* DELETE /api/library/1/
 
 * GET    /api/reviews/?game=1
 * POST   /api/reviews/
-* PUT    /api/reviews/<id>/
-* DELETE /api/reviews/<id>/
+* PUT    /api/reviews/1/
+* DELETE /api/reviews/1/
 
-* GET    /api/profiles/<username>/
-* GET    /api/profiles/<username>/reviews/
-* GET    /api/profiles/<username>/library/
+* GET    /api/profiles/username/
+* GET    /api/profiles/username/reviews/
+* GET    /api/profiles/username/library/
