@@ -18,4 +18,7 @@ urlpatterns = [
 
     path('profile/<str:username>/', get_profile),
     path('profile/me/', MyProfileView.as_view()),
+
+    path('library/', LibraryListCreate.as_view()),
+    path('library/<int:pk>/', LibraryDetail.as_view()),
 ]

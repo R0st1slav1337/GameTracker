@@ -18,19 +18,27 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
-    password = serializers.CharField()
+    password = serializers.CharField(write_only=True)
 
 
 class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField()
-    password = serializers.CharField()
+    password = serializers.CharField(write_only=True)
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
     
+
 class ProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username')
 
     class Meta:
         model = Profile
         fields = ['username', 'bio', 'avatar', 'is_public']
+
+
+class LibrarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Library
+        fields = '__all__'
+        read_only_fields = ['user']

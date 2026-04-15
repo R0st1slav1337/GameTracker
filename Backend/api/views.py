@@ -10,26 +10,37 @@ from rest_framework import status
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import Game, Review, Profile
-from .serializers import GameSerializer, ReviewSerializer, RegisterSerializer, ProfileSerializer
+from .models import Game, Review, Profile, Library
+from .serializers import GameSerializer, ReviewSerializer, RegisterSerializer, ProfileSerializer, LoginSerializer, LibrarySerializer
 from .utils import save_rawg_game
 from .rawg_service import search_rawg_games, get_rawg_game
 
 @api_view(['POST'])
 def login_view(request):
-    user = authenticate(
-        username=request.data.get('username'),
-        password=request.data.get('password')
-    )
+    serializer = LoginSerializer(data=request.data)
+    
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    username = serializer.validated_data['username']
+    password = serializer.validated_data['password']
+    user = authenticate(username=username, password=password)
 
-    if user:
-        refresh = RefreshToken.for_user(user)
-        return Response({
+    if user is None:
+        return Response(
+            {'error': 'Invalid credential'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    refresh = RefreshToken.for_user(user)
+
+    return Response(
+        {
             'access': str(refresh.access_token),
             'refresh': str(refresh),
-        }, status=status.HTTP_200_OK)
-
-    return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+        },
+        status=status.HTTP_200_OK
+    )
 
 
 @api_view(['POST'])
@@ -69,6 +80,7 @@ def games_list(request):
     serializer = GameSerializer(games, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def game_detail(request, pk):
@@ -103,6 +115,7 @@ def rawg_search_view(request):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def rawg_game_detail_view(request, rawg_id):
@@ -118,6 +131,7 @@ def rawg_game_detail_view(request, rawg_id):
         return Response(GameSerializer(game).data)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class ReviewListCreate(APIView):
     permission_classes = [IsAuthenticated]
@@ -140,7 +154,7 @@ class ReviewDetail(APIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self, pk):
-        return get_object_or_404(Review, pk=pk) # program will not crash if there is no such pk
+        return get_object_or_404(Review, pk=pk) # program will not crash if there is no such review
     
     def get(self, request, pk):
         review = self.get_object(pk)
@@ -192,6 +206,7 @@ def get_profile(request, username):
     serializer = ProfileSerializer(profile)
     return Response(serializer.data)
 
+
 class MyProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -208,3 +223,50 @@ class MyProfileView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class LibraryListCreate(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        items = Library.objects.filter(user=request.user)
+        serializer = LibrarySerializer(items, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        serializer = LibrarySerializer(data = request.data)
+
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class LibraryDetail(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, pk):
+        return get_object_or_404(Library, pk=pk)
+    
+    def put(self, request, pk):
+        item = self.get_object(pk)
+
+        if item.user != request.user:
+            return Response({'error': 'Forbidden'}, status=status.HTTP_403_FORBIDDEN)
+        
+        serializer = LibrarySerializer(item, data = request.data)
+        if serializer.is_valid():
+            serializer.save(user=item.user)
+            return Response(serializer.data)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        item = self.get_object(pk)
+
+        if item.user != request.user:
+            return Response({'error': 'Forbidden'}, status=status.HTTP_403_FORBIDDEN)
+        
+        item.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
