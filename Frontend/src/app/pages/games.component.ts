@@ -7,6 +7,14 @@ import { ApiService } from '../../services/api.service';
   template: `
     <h2>Games</h2>
     <button (click)="loadGames()">Load Games</button>
+
+    <ul>
+      @for (game of games; track game.id) {
+        <li>
+          {{ game.title }} - {{ game.description }}
+        </li>
+      }
+    </ul>
   `
 })
 
