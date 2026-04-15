@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,20 @@ export class LoginComponent {
   username = '';
   password = '';
 
+  constructor(private api: ApiService) { }
+
   login() {
-    console.log(this.username, this.password);
+    this.api.login({
+      username: this.username,
+      password: this.password,
+    }).subscribe({
+      next: (res: any) => {
+        localStorage.setItem('token', res.access);
+        console.log(res);
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    })
   }
 }
