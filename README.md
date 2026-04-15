@@ -40,25 +40,31 @@
 
 ## End Points (planned)
 
+### Authentication
 * POST   /api/auth/login/
 * POST   /api/auth/register/
 * POST   /api/auth/logout/
+* POST   /api/auth/refresh/
 
+### Games
 * GET    /api/games/
-* GET    /api/games/1/
-* POST   /api/games/
-* GET    /api/external/games/
+* GET    `/api/games/<int:game_id>/`
 
+### Library and Reviews
 * GET    /api/library/
 * POST   /api/library/
-* PUT    /api/library/1/
-* DELETE /api/library/1/
+* POST   /api/library/manual/
+* PUT    `/api/library/<int:pk>/`
+* DELETE `/api/library/<int:pk>/`
 
-* GET    /api/reviews/?game=1
+* GET    `/api/reviews/?game=<rawg_id>`
 * POST   /api/reviews/
-* PUT    /api/reviews/1/
-* DELETE /api/reviews/1/
+* PUT    `/api/reviews/<int:pk>/`
+* DELETE `/api/reviews/<int:pk>/`
 
-* GET    /api/profiles/username/
-* GET    /api/profiles/username/reviews/
-* GET    /api/profiles/username/library/
+### Profile
+* GET    `/api/profile/<str:username>/`
+* GET    `/api/profile/<str:username>/reviews/`
+* GET    `/api/profile/<str:username>/library/`
+* GET    /api/profile/me/
+* PUT    /api/profile/me/
