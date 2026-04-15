@@ -5,4 +5,4 @@ node_modules/
 dist/
 venv/
 /Backend/db.sqlite3
-/Backend/manage.py
+
