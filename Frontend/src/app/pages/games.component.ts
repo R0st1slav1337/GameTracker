@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-games',
@@ -10,7 +11,13 @@ import { Component } from '@angular/core';
 })
 
 export class GamesComponent {
+  constructor(private api: ApiService) {}
+
+  games: any[] = [];
+
   loadGames() {
-    console.log('Load Games');
+    this.api.getGames().subscribe((data: any) => {
+      this.games = data;
+    });
   }
 }
