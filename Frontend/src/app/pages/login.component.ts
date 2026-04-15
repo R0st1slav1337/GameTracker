@@ -27,7 +27,7 @@ export class LoginComponent {
     }).subscribe({
       next: (res: any) => {
         localStorage.setItem('token', res.access);
-        console.log(res);
+        localStorage.setItem('refresh', res.refresh);
       },
       error: (err) => {
         console.error(err);
