@@ -17,4 +17,8 @@ export class ApiService {
   getGames() {
     return this.http.get(this.baseURL + 'games/');
   }
+
+  logout(refresh: string) {
+    return this.http.post(this.baseURL + 'auth/logout/', {refresh});
+  }
 }
