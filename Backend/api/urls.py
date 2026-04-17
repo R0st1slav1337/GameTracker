@@ -9,9 +9,8 @@ urlpatterns = [
     path('auth/logout/', LogoutView.as_view()),
 
     path('games/', RawgGameListView.as_view()),
-    path('games/<int:pk>/', game_detail),
+    path('games/<int:rawg_id>/', rawg_game_detail_view),
     path('games/search/', rawg_search_view),
-    path('games/rawg/<int:rawg_id>/', rawg_game_detail_view),
 
     path('reviews/', ReviewListCreate.as_view()),
     path('reviews/<int:pk>/', ReviewDetail.as_view()),
