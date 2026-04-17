@@ -11,7 +11,7 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Game, Review, Profile, Library
-from .serializers import GameSerializer, ReviewSerializer, RegisterSerializer, ProfileSerializer, LoginSerializer, LibrarySerializer
+from .serializers import GameSerializer, ReviewSerializer, RegisterSerializer, ProfileSerializer, LoginSerializer, LibrarySerializer, ManualLibrarySerializer
 from .utils import save_rawg_game
 from .rawg_service import search_rawg_games, get_rawg_game, get_rawg_games
 
@@ -294,3 +294,13 @@ class RawgGameListView(APIView):
         page_size = request.query_params.get("page_size", 10)
         games = get_rawg_games(page,page_size)
         return Response(games)
+
+
+class ManualLibraryView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self,request):
+        serializer = ManualLibrarySerializer(data = request.data, context = {'request':request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_201_CREATED)
+        return Response({'error': 'entry creation error'}, status = status.HTTP_400_BAD_REQUEST)
