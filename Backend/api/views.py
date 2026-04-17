@@ -94,9 +94,10 @@ def get_or_create_game_from_rawg(rawg_id):
 @permission_classes([AllowAny])
 def games_list(request):
     search = request.GET.get('search', '').strip()
+    page = request.GET.get('page','').strip()
 
     try:
-        data = search_rawg_games(search)
+        data = search_rawg_games(search, page)
         simplified = []
 
         for item in data.get("results", []):
