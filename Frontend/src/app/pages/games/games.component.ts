@@ -49,4 +49,19 @@ export class GamesComponent {
       this.games = data;
     });
   }
+
+  ngOnInit() {
+    this.loading = true;
+    this.error = '';
+    this.gamesService.searchGames('').subscribe({
+      next: (res) => {
+        this.games.set(res.results)
+        this.loading = false;
+      },
+      error: () => {
+        this.error = "failed to load games"
+        this.loading = false;
+      }
+    })
+  }
 }
