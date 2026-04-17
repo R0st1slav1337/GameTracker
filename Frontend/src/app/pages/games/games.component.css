@@ -39,3 +39,30 @@ button {
 .error {
   color: red;
 }
+
+footer {
+  display: flex;
+  width: 8%;
+  margin: auto;
+  height: 4vh;
+  justify-content: space-between;
+  margin-top: 10px;
+
+}
+
+.pagination{
+  align-items: center;
+  display: flex;
+  gap: 5px;
+  position: relative;
+  height: 100%;
+  border: 1px solid #000000;
+  border-radius: 8px;
+  z-index: 3;
+}
+
+.pagination:hover{
+  background-color: #c6e9f3;
+  transform: scale(1.03);
+  transition: 0.5s;
+}

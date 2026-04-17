@@ -20,6 +20,8 @@ export class GamesComponent {
   games = signal<any[]>([])
   loading = false;
   error = '';
+  page_number = signal<number>(1)
+  next = signal<string>('')
 
   private gamesService = inject(GameService);
   private router = inject(Router);
@@ -28,10 +30,11 @@ export class GamesComponent {
     this.loading = true;
     this.error = '';
 
-    this.gamesService.searchGames(this.query).subscribe({
+    this.gamesService.searchGames(this.query,1).subscribe({
       next: (res) => {
         this.games.set(res.results)
         this.loading = false;
+        this.next.set(res.next)
       },
       error: () => {
         this.error = 'Failed to load games';
@@ -53,15 +56,36 @@ export class GamesComponent {
   ngOnInit() {
     this.loading = true;
     this.error = '';
-    this.gamesService.searchGames('').subscribe({
+    this.gamesService.searchGames('',1).subscribe({
       next: (res) => {
         this.games.set(res.results)
         this.loading = false;
+        this.next.set(res.next)
       },
       error: () => {
         this.error = "failed to load games"
         this.loading = false;
       }
     })
+  }
+
+  onForward(): boolean{
+    if(this.next()!='' && this.next()!=null){
+      return true;
+    }
+    return false;
+  }
+
+  forward(): void {
+    if(this.onForward()){
+      console.log("forward");
+      this.page_number.update((value:number)=> value+1);
+      this.gamesService.searchGames(this.query,this.page_number()).subscribe({
+        next: (res) => {
+          console.log(res)
+          this.games.set(res.results)
+        }
+      })
+    }
   }
 }

@@ -27,3 +27,12 @@
     </div>
   }
 </div>
+
+@if(!loading){
+  <footer>
+      <button class = "pagination"><=</button>
+      <p>{{page_number()}}</p>
+      <button class = "pagination" (click)="forward()" >=></button>
+
+  </footer>
+}

@@ -13,6 +13,7 @@ interface GameCard {
 interface GamesResponse {
   count: number;
   results: GameCard[];
+  next: string;
 }
 
 @Injectable({
@@ -22,8 +23,8 @@ export class GameService {
   private http = inject(HttpClient);
   private baseUrl = 'http://127.0.0.1:8000/api';
 
-  searchGames(query: string): Observable<GamesResponse> {
-    return this.http.get<GamesResponse>(`${this.baseUrl}/games/?search=${query}`);
+  searchGames(query: string, page: number): Observable<GamesResponse> {
+    return this.http.get<GamesResponse>(`${this.baseUrl}/games/?search=${query}&page=${page}`);
   }
 
   getGameDetail(id: number): Observable<any> {
