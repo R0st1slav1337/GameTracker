@@ -57,7 +57,7 @@ class LibrarySerializer(serializers.ModelSerializer):
                 description = data.get("description",""),
                 release_date = data["release_date"],
                 rating = data["rating"],
-                generes = data["generes"],
+                generes = data["genres"],
                 image = data.get("image"),
                 slug = data["slug"],
             )
@@ -65,4 +65,40 @@ class LibrarySerializer(serializers.ModelSerializer):
             user = user,
             game = game,
             **validated_data
+        )
+
+
+class ManualLibrarySerializer(serializers.ModelSerializer):
+
+    title = serializers.CharField(required=True)  #
+    description = serializers.CharField(required=False)
+    release_date = serializers.DateField(required=False)
+    rating = serializers.FloatField(required=False)
+    genres = serializers.CharField(required=False)
+    image = serializers.URLField(required=False)
+
+    class Meta:
+        model = Library
+        fields = ['title', 'description', 'release_date','rating', 'genres', 'image']
+        read_only_fields = ['user']
+
+    def create(self,validated_data):
+        request = self.context.get("request")
+        user = request.user
+
+        game = Game.objects.create(
+            rawg_id=None,
+            title=validated_data.get("title"),
+            description=validated_data.get("description", ""),
+            release_date=validated_data.get("release_date", None),
+            rating=validated_data.get("rating", None),
+            genres=validated_data.get("genres", None),
+            image=validated_data.get("image", None),
+            slug=""
+        )
+
+        return Library.objects.create(
+            user = user,
+            game = game,
+            status = validated_data.get('status')
         )
