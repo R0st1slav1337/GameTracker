@@ -77,6 +77,7 @@ export class GamesComponent {
   }
 
   forward(): void {
+    this.loading = true;
     if(this.onForward()){
       console.log("forward");
       this.page_number.update((value:number)=> value+1);
@@ -84,6 +85,12 @@ export class GamesComponent {
         next: (res) => {
           console.log(res)
           this.games.set(res.results)
+          this.loading = false
+          this.next.set(res.next)
+        },
+        error: () => {
+          this.error = "failed to load games"
+          this.loading = false;
         }
       })
     }
