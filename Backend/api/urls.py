@@ -20,4 +20,5 @@ urlpatterns = [
 
     path('library/', LibraryListCreate.as_view()),
     path('library/<int:pk>/', LibraryDetail.as_view()),
+    path('library/manual/', ManualLibraryView.as_view()),
 ]
