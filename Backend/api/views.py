@@ -11,9 +11,10 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Game, Review, Profile, Library
-from .serializers import GameSerializer, ReviewSerializer, RegisterSerializer, ProfileSerializer, LoginSerializer, LibrarySerializer
+from .serializers import GameSerializer, ReviewSerializer, RegisterSerializer, ProfileSerializer, LoginSerializer, \
+    LibrarySerializer, ManualLibrarySerializer, ReviewCreateSerializer, LibraryCreateSerializer
 from .utils import save_rawg_game
-from .rawg_service import search_rawg_games, get_rawg_game
+from .rawg_service import search_rawg_games, get_rawg_game, get_rawg_games
 
 
 # Login user and return JWT tokens
@@ -77,37 +78,25 @@ class LogoutView(APIView):
             )
 
 
+def get_or_create_game_from_rawg(rawg_id):
+    game = Game.objects.filter(rawg_id=rawg_id).first()
+
+    if game:
+        return game
+
+    data = get_rawg_game(rawg_id)
+    return save_rawg_game(data)
+
 # Get list of games from local database.
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def games_list(request):
-    games = Game.objects.all()
-    serializer = GameSerializer(games, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-# Get game details by id from local database.
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def game_detail(request, pk):
-    try:
-        game = Game.objects.get(pk=pk)
-        serializer = GameSerializer(game)
-        return Response(serializer.data)
-    except Game.DoesNotExist:
-        return Response({'error': 'Game not found'}, status=status.HTTP_404_NOT_FOUND)
-
 
 # Search games on rawg.io by query parameter "search". Return simplified game data list
 @api_view(['GET'])
 @permission_classes([AllowAny])
-def rawg_search_view(request):
-    query = request.GET.get('search', '')
-    if not query:
-        return Response({'error': 'search parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
-    
+def games_list(request):
+    search = request.GET.get('search', '').strip()
+
     try:
-        data = search_rawg_games(query)
+        data = search_rawg_games(search)
         simplified = []
 
         for item in data.get("results", []):
@@ -118,7 +107,14 @@ def rawg_search_view(request):
                 "rating": item.get("rating"),
                 "image": item.get("background_image"),
             })
-        return Response(simplified)
+
+        return Response({
+            "count": data.get("count"),
+            "next": data.get("next"),
+            "previous": data.get("previous"),
+            "results": simplified,
+        }, status=status.HTTP_200_OK)
+
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
@@ -126,17 +122,22 @@ def rawg_search_view(request):
 # Get game details by rawg.io id. If game is not in local database, get it from rawg.io and save to local database
 @api_view(['GET'])
 @permission_classes([AllowAny])
-def rawg_game_detail_view(request, rawg_id):
+def game_detail(request, game_id):
     try:
-        game = Game.objects.filter(rawg_id=rawg_id).first()
+        data = get_rawg_game(game_id)
 
-        # Do not make request to rawg.io if game alreagy locally saved
-        if game:
-            return Response(GameSerializer(game).data)
+        result = {
+            "id": data.get("id"),
+            "name": data.get("name"),
+            "description": data.get("description"),
+            "released": data.get("released"),
+            "rating": data.get("rating"),
+            "image": data.get("background_image"),
+            "genres": [genre.get("name") for genre in data.get("genres", [])],
+        }
 
-        data = get_rawg_game(rawg_id)
-        game = save_rawg_game(data)
-        return Response(GameSerializer(game).data)
+        return Response(result, status=status.HTTP_200_OK)
+
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -146,18 +147,47 @@ class ReviewListCreate(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        reviews = Review.objects.all()
+        rawg_id = request.GET.get('game')
+
+        if not rawg_id:
+            return Response({'error': 'game querry parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        game = Game.objects.filter(rawg_id=rawg_id).first()
+
+        if not game:
+            return Response([], status=status.HTTP_200_OK)
+
+        reviews = Review.objects.filter(game=game)
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        serializer = ReviewSerializer(data=request.data)
+        serializer = ReviewCreateSerializer(data=request.data)
 
-        if serializer.is_valid():
-            serializer.save(user=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        rawg_id = serializer.validated_data['rawg_id']
+        text = serializer.validated_data['text']
+        rating = serializer.validated_data['rating']
+
+        try:
+            game = get_or_create_game_from_rawg(rawg_id)
+
+            review, created = Review.objects.update_or_create(
+                user=request.user,
+                game=game,
+                defaults={
+                    'text': text,
+                    'rating': rating,
+                }
+            )
+
+            response_serializer = ReviewSerializer(review)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # Get, update or delete specific review
 class ReviewDetail(APIView):
@@ -237,6 +267,47 @@ class MyProfileView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# Check if user can view profile. User can view profile if it is public or user is owner of the profile
+def can_view_profile(request, user, profile):
+    return profile.is_public or request.user == user
+
+
+# Get list of reviews for specific user. User can view reviews if profile is public or user is owner of the profile
+class UserReviewView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, username):
+        try:
+            user = User.objects.get(username=username)
+            profile = Profile.objects.get(user=user)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        if not can_view_profile(request, user, profile):
+            return Response({'error': 'Profile is private'}, status=status.HTTP_403_FORBIDDEN)
+
+        reviews = Review.objects.filter(user=user)
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# Get list of games in user library. User can view library if profile is public or user is owner of the profile
+class UserLibraryView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, username):
+        try:
+            user = User.objects.get(username=username)
+            profile = Profile.objects.get(user=user)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        if not can_view_profile(request, user, profile):
+            return Response({'error': 'Profile is private'}, status=status.HTTP_403_FORBIDDEN)
+
+        items = Library.objects.filter(user=user)
+        serializer = LibrarySerializer(items, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 # Get list of games in user library or add game to library
 class LibraryListCreate(APIView):
     permission_classes = [IsAuthenticated]
@@ -247,10 +318,12 @@ class LibraryListCreate(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request):
-        serializer = LibrarySerializer(data = request.data)
-
+        serializer = LibraryCreateSerializer(
+            data = request.data,
+            context = {'request':request}
+        )
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -284,3 +357,22 @@ class LibraryDetail(APIView):
         
         item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ManualLibraryView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = ManualLibrarySerializer(
+            data=request.data,
+            context={'request': request}
+        )
+
+        if serializer.is_valid():
+            library = serializer.save()
+            return Response(
+                LibrarySerializer(library).data,
+                status=status.HTTP_201_CREATED
+            )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
