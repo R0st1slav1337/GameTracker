@@ -18,7 +18,7 @@
 }
 
 <div class="games-grid">
-  @for (game of games; track game.id) {
+  @for (game of games(); track game.id) {
     <div class="game-card" (click)="goToGame(game.id)">
       <img [src]="game.image" alt="" />
       <h3>{{ game.name }}</h3>

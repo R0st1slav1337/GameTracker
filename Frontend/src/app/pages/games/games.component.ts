@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import { ApiService } from '../../../services/api.service';
 import { GameService } from '../../../services/games.service';
 import { FormsModule } from '@angular/forms';
@@ -17,7 +17,7 @@ export class GamesComponent {
   constructor(private api: ApiService) {}
 
   query = ''
-  games: any[] = [];
+  games = signal<any[]>([])
   loading = false;
   error = '';
 
@@ -30,7 +30,7 @@ export class GamesComponent {
 
     this.gamesService.searchGames(this.query).subscribe({
       next: (res) => {
-        this.games = res.results;
+        this.games.set(res.results)
         this.loading = false;
       },
       error: () => {
