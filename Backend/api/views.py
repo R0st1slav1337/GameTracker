@@ -13,7 +13,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Game, Review, Profile, Library
 from .serializers import GameSerializer, ReviewSerializer, RegisterSerializer, ProfileSerializer, LoginSerializer, LibrarySerializer
 from .utils import save_rawg_game
-from .rawg_service import search_rawg_games, get_rawg_game
+from .rawg_service import search_rawg_games, get_rawg_game, get_rawg_games
 
 
 # Login user and return JWT tokens
@@ -286,3 +286,11 @@ class LibraryDetail(APIView):
         
         item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class RawgGameListView(APIView):
+    def get(self, request):
+        page = request.query_params.get("page,",1)
+        page_size = request.query_params.get("page_size", 10)
+        games = get_rawg_games(page,page_size)
+        return Response(games)

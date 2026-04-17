@@ -25,3 +25,16 @@ def get_rawg_game(rawg_id):
     )
     response.raise_for_status()
     return response.json()
+
+def get_rawg_games(page=1, page_size=10):
+    response = requests.get(
+        f"{BASE_URL}/games",
+        params={
+            "key": settings.RAWG_API_KEY,
+            "page": page,
+            "page_size": page_size,
+        },
+        timeout=10
+    )
+    response.raise_for_status()
+    return response.json()
