@@ -21,4 +21,24 @@ export class ApiService {
   logout(refresh: string) {
     return this.http.post(this.baseURL + 'auth/logout/', {refresh});
   }
+
+  getLibrary() {
+    return this.http.get(this.baseURL + 'library/');
+  }
+
+  addLibrary(data: any) {
+    return this.http.post(this.baseURL + 'library/', data);
+  }
+
+  updateLibrary(id: number, data: any) {
+    return this.http.put(this.baseURL + `library/${id}/`, data);
+  }
+
+  deleteLibrary(id: number) {
+    return this.http.delete(this.baseURL + `library/${id}/`);
+  }
+
+  getProfile() {
+    return this.http.get(this.baseURL + 'profile/');
+  }
 }
