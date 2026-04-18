@@ -22,19 +22,29 @@ export class GamesComponent {
   error = '';
   page_number = signal<number>(1)
   next = signal<string>('')
+  previous = signal<string>('')
 
   private gamesService = inject(GameService);
   private router = inject(Router);
 
+
   search(): void {
     this.loading = true;
     this.error = '';
+    this.loadGames(this.page_number());
+  }
 
-    this.gamesService.searchGames(this.query,1).subscribe({
+  goToGame(id: number): void {
+    this.router.navigate([`/games`, id]);
+  }
+
+  loadGames(page_num = 1) {
+    this.gamesService.searchGames(this.query,page_num).subscribe({
       next: (res) => {
         this.games.set(res.results)
         this.loading = false;
         this.next.set(res.next)
+        this.previous.set(res.previous)
       },
       error: () => {
         this.error = 'Failed to load games';
@@ -43,34 +53,21 @@ export class GamesComponent {
     });
   }
 
-  goToGame(id: number): void {
-    this.router.navigate([`/games`, id]);
-  }
-
-  loadGames() {
-    this.api.getGames().subscribe((data: any) => {
-      this.games = data;
-    });
-  }
-
   ngOnInit() {
     this.loading = true;
     this.error = '';
-    this.gamesService.searchGames('',1).subscribe({
-      next: (res) => {
-        this.games.set(res.results)
-        this.loading = false;
-        this.next.set(res.next)
-      },
-      error: () => {
-        this.error = "failed to load games"
-        this.loading = false;
-      }
-    })
+    this.loadGames();
   }
 
   onForward(): boolean{
     if(this.next()!='' && this.next()!=null){
+      return true;
+    }
+    return false;
+  }
+
+  onBackward(): boolean{
+    if(this.previous()!='' && this.previous()!=null){
       return true;
     }
     return false;
@@ -81,18 +78,16 @@ export class GamesComponent {
     if(this.onForward()){
       console.log("forward");
       this.page_number.update((value:number)=> value+1);
-      this.gamesService.searchGames(this.query,this.page_number()).subscribe({
-        next: (res) => {
-          console.log(res)
-          this.games.set(res.results)
-          this.loading = false
-          this.next.set(res.next)
-        },
-        error: () => {
-          this.error = "failed to load games"
-          this.loading = false;
-        }
-      })
+      this.loadGames(this.page_number());
+    }
+  }
+
+  backward(): void {
+    this.loading = true;
+    if(this.onBackward()){
+      console.log("backward");
+      this.page_number.update((value:number) => value-1);
+      this.loadGames(this.page_number());
     }
   }
 }

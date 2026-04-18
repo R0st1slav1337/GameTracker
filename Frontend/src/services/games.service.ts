@@ -14,6 +14,7 @@ interface GamesResponse {
   count: number;
   results: GameCard[];
   next: string;
+  previous: string;
 }
 
 @Injectable({
