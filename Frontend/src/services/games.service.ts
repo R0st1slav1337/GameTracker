@@ -17,6 +17,17 @@ interface GamesResponse {
   previous: string;
 }
 
+interface GameDetail {
+  id: number;
+  name: string;
+  description: string;
+  released: string;
+  rating: number;
+  genres: string;
+  image: string;
+  slug: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -28,7 +39,7 @@ export class GameService {
     return this.http.get<GamesResponse>(`${this.baseUrl}/games/?search=${query}&page=${page}`);
   }
 
-  getGameDetail(id: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/games/${id}/`);
+  getGameDetail(id: number): Observable<GameDetail> {
+    return this.http.get<GameDetail>(`${this.baseUrl}/games/${id}/`);
   }
 }

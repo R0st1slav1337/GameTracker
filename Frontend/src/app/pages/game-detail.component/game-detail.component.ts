@@ -1,5 +1,6 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { GameService } from '../../../services/games.service';
 
 @Component({
   selector: 'app-game-detail',
@@ -10,13 +11,21 @@ import { ActivatedRoute } from '@angular/router';
 export class GameDetailComponent {
 
   route = inject(ActivatedRoute);
-
+  gameService = inject(GameService);
+  game_details = signal<any>("")
 
 
   ngOnInit(){
     this.route.paramMap.subscribe(params => {
       console.log(params);
-      const id = params.get('id')
+      const id: number = Number(params.get('id'))
+      console.log(id);
+      this.gameService.getGameDetail(id).subscribe({
+        next: (res) => {
+          this.game_details.set(res)
+          console.log(this.game_details);
+        }
+      })
     })
   }
 

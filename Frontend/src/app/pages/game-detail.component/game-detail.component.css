@@ -1,0 +1,36 @@
+.game-detail-card{
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: #1e1e1e;
+  border-radius: 50px;
+}
+.image_container{
+  position: relative;
+  left: 15px;
+  display: inline-block;
+  width: 35vw;
+  margin-right: 100px;
+
+}
+.image_container img{
+  position: relative;
+  object-fit: contain;
+  width: 100%;
+  border-radius: 25px;
+  border: 2px solid #373737;
+}
+.detail_container{
+  position: relative;
+  display: inline-block;
+  width: 50vw;
+  font-weight: bold;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #f1d873;
+}
+
+.title{
+  font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+  font-size: 2vw;
+}

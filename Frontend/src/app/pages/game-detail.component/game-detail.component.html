@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+<div class = "game-detail-card">
+  <div class = 'image_container'><img src = '{{game_details().image}}'></div>
+  <aside class = 'detail_container'>
+    <p class = "title">{{game_details().name}} </p>
+    <p>{{game_details().description}}</p>
+    <p> Release date: {{game_details().released}}</p>
+    <p> Rating: {{game_details().rating}}</p>
+    <p> Genres: {{game_details().genres}}</p>
+  </aside>
+</div>
 
-</body>
-</html>
+
+
+
+
