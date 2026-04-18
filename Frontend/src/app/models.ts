@@ -12,3 +12,8 @@ export interface GamesApiResponse {
   previous: string|null;
   results: Game[];
 }
+
+export interface Library {
+  rawg_id: number;
+  status: string;
+}

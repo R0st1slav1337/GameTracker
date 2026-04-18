@@ -1,6 +1,7 @@
 import {Component, inject, signal} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { GameService } from '../../../services/games.service';
+import {LibraryService} from '../../../services/library.service';
 
 @Component({
   selector: 'app-game-detail',
@@ -12,6 +13,7 @@ export class GameDetailComponent {
 
   route = inject(ActivatedRoute);
   gameService = inject(GameService);
+  libraryService = inject(LibraryService);
   game_details = signal<any>("")
   loading = signal<boolean>(false)
 
@@ -38,4 +40,17 @@ export class GameDetailComponent {
     return doc.body.textContent || '';
   }
 
+  addToLib(){
+    let request = {
+      "rawg_id" : this.game_details().id,
+      "status" : "want"
+    }
+    console.log(request)
+    this.libraryService.addToLibrary(request).subscribe({
+      next: (res) => {
+        console.log(res)
+      }
+    })
+
+  }
 }
