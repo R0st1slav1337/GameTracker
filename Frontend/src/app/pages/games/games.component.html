@@ -28,11 +28,10 @@
   }
 </div>
 
-@if(!loading){
+<!--@if(!loading){-->
   <footer>
-      <button class = "pagination"><=</button>
+      <button class = "pagination" (click)="backward()" [disabled]="!onBackward()||loading"><=</button>
       <p>{{page_number()}}</p>
-      <button class = "pagination" (click)="forward()" >=></button>
-
+      <button class = "pagination" (click)="forward()" [disabled] = "!onForward()||loading">=></button>
   </footer>
-}
+
