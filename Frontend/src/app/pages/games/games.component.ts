@@ -2,15 +2,16 @@ import {Component, inject, signal} from '@angular/core';
 import { ApiService } from '../../../services/api.service';
 import { GameService } from '../../../services/games.service';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-games',
   standalone: true,
   templateUrl: './games.component.html',
   styleUrl: './games.component.css',
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, NgOptimizedImage]
 })
 
 export class GamesComponent {
@@ -23,6 +24,8 @@ export class GamesComponent {
   page_number = signal<number>(1)
   next = signal<string>('')
   previous = signal<string>('')
+  forwardLogo = 'Button.assets/Forward.png';
+  backwardLogo = 'Button.assets/Backward.png';
 
   private gamesService = inject(GameService);
   private router = inject(Router);

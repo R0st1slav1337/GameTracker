@@ -30,8 +30,8 @@
 
 <!--@if(!loading){-->
   <footer>
-      <button class = "pagination" (click)="backward()" [disabled]="!onBackward()||loading"><=</button>
-      <p>{{page_number()}}</p>
-      <button class = "pagination" (click)="forward()" [disabled] = "!onForward()||loading">=></button>
+      <button class = "pagination" (click)="backward()" [disabled]="!onBackward()||loading"><img [src]="backwardLogo" alt = "<="></button>
+      <p class = "pagenum">{{page_number()}}</p>
+      <button class = "pagination" (click)="forward()" [disabled] = "!onForward()||loading"><img [src]="forwardLogo" alt = "=>"></button>
   </footer>
 

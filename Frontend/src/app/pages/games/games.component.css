@@ -20,11 +20,12 @@ button {
 }
 
 .game-card {
-  border: 1px solid #ddd;
+  border: 1px solid #c2dffa;
   padding: 10px;
   border-radius: 10px;
   cursor: pointer;
   transition: 0.2s;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .game-card:hover {
@@ -42,27 +43,44 @@ button {
 
 footer {
   display: flex;
-  width: 8%;
+  width: 14%;
   margin: auto;
   height: 4vh;
   justify-content: space-between;
+  align-items: center;
   margin-top: 10px;
-
+  gap: 10px;
 }
 
 .pagination{
   align-items: center;
   display: flex;
-  gap: 5px;
   position: relative;
   height: 100%;
-  border: 1px solid #000000;
   border-radius: 8px;
   z-index: 3;
+  background-color: transparent;
 }
 
 .pagination:hover{
-  background-color: #c6e9f3;
+  background-color: #d8dfe3;
   transform: scale(1.03);
   transition: 0.5s;
+}
+
+.pagination img{
+  position: relative;
+  object-fit: contain;
+  height: 100%;
+  z-index: 2;
+}
+
+.pagenum{
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: bold;
 }
