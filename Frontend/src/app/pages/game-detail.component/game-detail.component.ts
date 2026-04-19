@@ -19,6 +19,7 @@ export class GameDetailComponent {
   game_details = signal<any>("");
   loading = signal<boolean>(false);
   choose = signal<boolean>(false);
+  xurl = 'Button.assets/x.png'
   status = ''
 
 
