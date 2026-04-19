@@ -11,7 +11,18 @@
       <p> Release date: {{game_details().released}}</p>
       <p> Rating: {{game_details().rating}}</p>
       <p> Genres: {{game_details().genres}}</p>
-      <button class = "add_library" (click) = 'addToLib()'>Add to library</button>
+      <button class = "add_library" (click) = 'toggleChoose()'>Add to library</button>
+      @if(choose()){
+        <div class = 'selector_container'>
+          <button (click)="toggleChoose()">><</button>
+          <select [(ngModel)]="status" (change) = "addToLib()" class = 'selector'>
+            <option value="" disabled selected hidden>Select an option</option>
+            <option value="want" >Want</option>
+            <option value="playing">Playing</option>
+            <option vlaue = "played">Played</option>
+          </select>
+        </div>
+      }
     </aside>
   }
 </div>

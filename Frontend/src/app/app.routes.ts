@@ -5,7 +5,7 @@ import { ProfileComponent } from './pages/profile.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { GameDetailComponent } from './pages/game-detail.component/game-detail.component';
 import { PublicProfileComponent } from './pages/public-profile.component';
-import {LibraryComponent} from './pages/library/library.component/library.component';
+import {LibraryComponent} from './pages/library/library.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'games', pathMatch: 'full' },

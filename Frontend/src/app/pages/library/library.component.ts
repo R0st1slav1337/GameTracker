@@ -54,7 +54,7 @@ export class LibraryComponent {
   }
 
   addGame() {
-    this.api.addToLibrary({
+    this.api.addLibrary({
       title: this.title,
       status: this.status,
     }).subscribe(() => this.load());

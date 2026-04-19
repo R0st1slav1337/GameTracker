@@ -34,3 +34,21 @@
   font-size: 2vw;
   color: #f1d873;
 }
+
+.selector{
+  height: 80%;
+  position: relative;
+}
+.selector_container{
+  bottom: 10px;
+  right: 30px;
+  display: block;
+  position: absolute;
+  height: 10vh;
+  z-index: 3;
+  background-color: transparent;
+  border-radius: 10px;
+}
+.add_library{
+
+}
