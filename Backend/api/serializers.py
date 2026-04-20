@@ -124,5 +124,5 @@ class ManualLibrarySerializer(serializers.ModelSerializer):
 class LibrarySerializer(serializers.ModelSerializer):
     class Meta:
         model = Library
-        fields = '__all__'
+        fields = ['id', 'game_title', 'status']
         read_only_fields = ['user']

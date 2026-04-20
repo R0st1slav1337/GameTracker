@@ -20,7 +20,7 @@ import { FormsModule } from '@angular/forms'
     <ul>
       @for (item of library; track item.id) {
         <li>
-          {{ item.game.title }} - {{ item.status }}
+          {{ item.game_title }} - {{ item.status }}
 
           <select [(ngModel)]="item.status" (change)="update(item)">
             <option value="want">Want</option>
