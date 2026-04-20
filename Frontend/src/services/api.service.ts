@@ -22,6 +22,10 @@ export class ApiService {
     return this.http.post(this.baseURL + 'auth/logout/', {refresh});
   }
 
+  addManualGame(data: any) {
+    return this.http.post(this.baseURL + 'library/manual', data);
+  }
+
   getLibrary() {
     return this.http.get(this.baseURL + 'library/');
   }
@@ -39,6 +43,6 @@ export class ApiService {
   }
 
   getProfile() {
-    return this.http.get(this.baseURL + 'profile/');
+    return this.http.get(this.baseURL + 'profile/me/');
   }
 }
