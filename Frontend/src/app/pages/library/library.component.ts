@@ -48,8 +48,13 @@ export class LibraryComponent {
   }
 
   load() {
-    this.api.getLibrary().subscribe((data: any) => {
-      this.library = data;
+    this.api.getLibrary().subscribe({
+      next: (data: any) => {
+        this.library = data;
+      },
+      error: () => {
+        alert('Failed to load library');
+      }
     });
   }
 
