@@ -23,7 +23,7 @@ export class ApiService {
   }
 
   addManualGame(data: any) {
-    return this.http.post(this.baseURL + 'library/manual', data);
+    return this.http.post(this.baseURL + 'library/manual/', data);
   }
 
   getLibrary() {

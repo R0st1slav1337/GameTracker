@@ -1,45 +1,44 @@
-import { Component } from '@angular/core'
+import {Component, signal} from '@angular/core'
 import { ApiService } from '../../../services/api.service';
 import { FormsModule } from '@angular/forms'
+import {Library, LibraryResponse} from '../../models';
+import {ManualAddingComponent} from './manual-adding.component/manual-adding.component';
 
 @Component({
   selector: 'app-library',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, ManualAddingComponent],
   template: `
     <h2>My Library</h2>
-
-    <input [(ngModel)]="title" placeholder="Game title">
-    <select [(ngModel)]="status">
-      <option value="want">Want</option>
-      <option value="playing">Playing</option>
-      <option value="played">Played</option>
-    </select>
-    <button (click)="addGame()">Add Game</button>
-
-    <ul>
-      @for (item of library; track item.id) {
-        <li>
-          {{ item.game_title }} - {{ item.status }}
+    <button (click) = "toggleManual()">Haven't found your favorite game? Add it here!</button>
+    @if(manual()){
+      <app-manual-adding-component [open]="manual()"  (success) = 'load()'></app-manual-adding-component>
+    }
+    <div class = "games">
+      @for (item of library(); track item.game) {
+        <div class = "library_card">
+          {{ item.game.title }} - {{ item.status }}
+            <img class = "game_image" src = "{{item.game.image}}">
 
           <select [(ngModel)]="item.status" (change)="update(item)">
             <option value="want">Want</option>
             <option value="playing">Playing</option>
             <option value="played">Played</option>
           </select>
-
           <button (click)="delete(item.id)">Delete</button>
-        </li>
+        </div>
       }
-    </ul>
-  `
+    </div>
+  `,
+  styleUrl: "./library.component.css"
 })
 
 export class LibraryComponent {
 
-  library: any[] = [];
+  library = signal<LibraryResponse[]>([]);
   title = '';
   status = 'want';
+  manual = signal<boolean>(false);
 
   constructor(private api: ApiService) {}
 
@@ -50,7 +49,7 @@ export class LibraryComponent {
   load() {
     this.api.getLibrary().subscribe({
       next: (data: any) => {
-        this.library = data;
+        this.library.set(data);
       },
       error: () => {
         alert('Failed to load library');
@@ -74,5 +73,9 @@ export class LibraryComponent {
 
   delete(id: number) {
     this.api.deleteLibrary(id).subscribe(() => this.load());
+  }
+
+  toggleManual() {
+    this.manual.set(!this.manual());
   }
 }

@@ -19,9 +19,9 @@ class Game(models.Model):
 
 class Library(models.Model):
     STATUS_CHOICES = [
-        ('played', 'Played'),
         ('playing', 'Playing'),
-        ('want', 'Want to play')
+        ('want', 'Want to play'),
+        ('played', 'Played')
     ]
 
     user = models.ForeignKey(User, on_delete = models.CASCADE)
