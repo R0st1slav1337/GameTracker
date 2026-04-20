@@ -52,14 +52,16 @@ export class GameDetailComponent {
 
   addToLib(){
     this.toggleChoose();
-    let request = {
-      "rawg_id" : this.game_details().id,
-      "status" : this.status,
+    const request = {
+      rawg_id : this.game_details().id,
+      status : this.status,
     }
-    console.log(request)
     this.libraryService.addToLibrary(request).subscribe({
-      next: (res) => {
-        console.log(res)
+      next: () => {
+        alert('Added to library');
+      },
+      error: () => {
+        alert('Failed to add library');
       }
     })
 
