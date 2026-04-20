@@ -1,11 +1,11 @@
 <div class = "manual">
   <form name = "manual_add_form">
-    <input type = 'text', placeholder="Game title" [(ngModel)]="title" name = "_title">
-    <input type = 'text', placeholder="Description" [(ngModel)]="description" name = "_description">
-    <input type = 'text', placeholder="Release date YYYY-MM-DD" [(ngModel)]="release_date" name = "_date">
-    <input type = 'number', placeholder="Game rating" [(ngModel)]="rating" name = "_rating">
-    <input type = 'text', placeholder="Genres" [(ngModel)]="genres" name = '_genres'>
-    <input type = 'text', placeholder="Image URL" [(ngModel)]="image" name = "_img">
+    <input type = 'text' placeholder="Game title" [(ngModel)]="title" name = "_title">
+    <input type = 'text' placeholder="Description" [(ngModel)]="description" name = "_description">
+    <input type = 'text' placeholder="Release date YYYY-MM-DD" [(ngModel)]="release_date" name = "_date">
+    <input type = 'number' min = "1" max = "10" placeholder="Game rating" [(ngModel)]="rating" name = "_rating">
+    <input type = 'text' placeholder="Genres" [(ngModel)]="genres" name = '_genres'>
+    <input type = 'text' placeholder="Image URL" [(ngModel)]="image" name = "_img">
     <select [(ngModel)]="status" class = 'selector' name = "_status">
       <option value="" disabled selected hidden>Select an option</option>
       <option value="want" >Want</option>
