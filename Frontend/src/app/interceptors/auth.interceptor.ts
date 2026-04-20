@@ -23,6 +23,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     });
     return next(cloned);
   }
+  else{
+    router.navigate(['/login']);
+  }
 
   return next(authReq).pipe(
     catchError(err => {

@@ -42,6 +42,20 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ['username', 'bio', 'avatar', 'is_public']
 
+    def update(self, instance, validated_data):
+        user_data = validated_data.pop('user', None)
+
+        if user_data:
+            user = instance.user
+            user.username = user_data.get('username', user.username)
+            user.save()
+
+        instance.bio = validated_data.get('bio', instance.bio)
+        instance.avatar = validated_data.get('avatar', instance.avatar)
+        instance.is_public = validated_data.get('is_public', instance.is_public)
+
+        instance.save()
+        return instance
 
 class LibraryCreateSerializer(serializers.ModelSerializer):
     rawg_id = serializers.IntegerField(write_only=True)
