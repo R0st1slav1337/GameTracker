@@ -62,7 +62,10 @@ export class LibraryComponent {
     this.api.addLibrary({
       title: this.title,
       status: this.status,
-    }).subscribe(() => this.load());
+    }).subscribe({
+      next: () => this.load(),
+      error: () => alert('Failed to add game'),
+    });
   }
 
   update(item: any) {
