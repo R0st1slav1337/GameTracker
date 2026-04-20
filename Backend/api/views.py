@@ -148,8 +148,8 @@ class ReviewListCreate(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        rawg_id = request.GET.get('game')
-
+        rawg_id = request.GET.get('games')
+        print(rawg_id)
         if not rawg_id:
             return Response({'error': 'game querry parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -216,7 +216,7 @@ class ReviewDetail(APIView):
         if serializer.is_valid():
             serializer.save(user=review.user) # Save correct user for PUT
             return Response(serializer.data, status=status.HTTP_200_OK)
-        
+        print("HERE")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
@@ -326,7 +326,7 @@ class LibraryListCreate(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

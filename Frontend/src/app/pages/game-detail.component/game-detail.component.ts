@@ -78,6 +78,7 @@ export class GameDetailComponent {
       },
       error: () => {
         alert('Failed to load reviews');
+        console.log(this.game_details().id);
       }
     });
   }

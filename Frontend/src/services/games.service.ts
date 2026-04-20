@@ -57,8 +57,8 @@ export class GameService {
     return this.http.get<GameDetail>(`${this.baseUrl}/games/${id}/`);
   }
 
-  getReviews(rawgId: number): Observable<Review[]> {
-    return this.http.get<Review[]>(`${this.baseUrl}/reviews/?games=${rawgId}`);
+  getReviews(game: number): Observable<Review[]> {
+    return this.http.get<Review[]>(`${this.baseUrl}/reviews/?games=${game}`);
   }
 
   addReview(data: ReviewRequest): Observable<Review> {

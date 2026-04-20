@@ -28,16 +28,16 @@
 </div>
 
 <div class="reviews-section">
-  <h3>User Reviews</h3>
+  <h3 style = "color:black">User Reviews</h3>
 
   @for (review of reviews(); track review.id) {
-    <div class="review">
+    <div class="review" style = "color:black">
       <p><b>{{ review.username }}</b> ({{ review.rating }}/10)</p>
       <p>{{ review.text }}</p>
     </div>
   }
 
-  <h4>Leave your review</h4>
+  <h4 style = "color:black">Leave your review</h4>
 
   <textarea [(ngModel)]="reviewText" placeholder="Write your review"></textarea>
 
