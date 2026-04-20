@@ -88,4 +88,19 @@ option{
   background-color: #cfc5c5;
 }
 
+.reviews-section {
+  margin-top: 20px;
+  color: white;
+}
 
+.review {
+  border-bottom: 1px solid gray;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+}
+
+textarea {
+  width: 100%;
+  height: 80px;
+  margin-top: 10px;
+}

@@ -28,6 +28,20 @@ interface GameDetail {
   slug: string;
 }
 
+interface Review {
+  id: number;
+  user: string;
+  game: number;
+  text: string;
+  rating: number;
+}
+
+interface ReviewRequest {
+  rawg_id: number;
+  text: string;
+  rating: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -41,5 +55,13 @@ export class GameService {
 
   getGameDetail(id: number): Observable<GameDetail> {
     return this.http.get<GameDetail>(`${this.baseUrl}/games/${id}/`);
+  }
+
+  getReviews(rawgId: number): Observable<Review[]> {
+    return this.http.get<Review[]>(`${this.baseUrl}/reviews/?games=${rawgId}`);
+  }
+
+  addReview(data: ReviewRequest): Observable<Review> {
+    return this.http.post<Review>(`${this.baseUrl}/reviews/`, data);
   }
 }

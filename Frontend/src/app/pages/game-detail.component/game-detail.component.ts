@@ -21,6 +21,9 @@ export class GameDetailComponent {
   choose = signal<boolean>(false);
   xurl = 'Button.assets/x.png'
   status = ''
+  reviews = signal<any[]>([]);
+  reviewText = '';
+  reviewRating = 5;
 
 
   ngOnInit(){
@@ -35,6 +38,7 @@ export class GameDetailComponent {
           this.game_details.set(res)
           console.log(this.game_details);
           this.loading.set(false);
+          this.loadReviews();
         }
       })
     })
@@ -63,7 +67,38 @@ export class GameDetailComponent {
       error: () => {
         alert('Failed to add library');
       }
-    })
+    });
 
+  }
+
+  loadReviews(){
+    this.gameService.getReviews(this.game_details().id).subscribe({
+      next: (data: any) => {
+        this.reviews.set(data);
+      },
+      error: () => {
+        alert('Failed to load reviews');
+      }
+    });
+  }
+
+  submitReview(){
+    const request = {
+      rawg_id : this.game_details().id,
+      text: this.reviewText,
+      rating : this.reviewRating,
+    };
+
+    this.gameService.addReview(request).subscribe({
+      next: () => {
+        alert('Review added');
+        this.reviewText = '';
+        this.reviewRating = 5;
+        this.loadReviews();
+      },
+      error: () => {
+        alert('Error submitting review');
+      }
+    });
   }
 }
