@@ -1,6 +1,6 @@
 import {Component, input, output} from '@angular/core';
 import { FormsModule} from '@angular/forms';
-import { ManualLibrary} from '../../../models';
+import { ManualLibrary } from '../../../models';
 import {ApiService} from '../../../../services/api.service';
 
 @Component({

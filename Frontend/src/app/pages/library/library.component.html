@@ -1,0 +1,24 @@
+<h2>My Library</h2>
+
+<button type="button" (click) = "toggleManual()">
+  {{ manual() ? 'Hide manual form' : 'Haven\'t found your favorite game? Add it here!'}}
+</button>
+
+@if (manual()) {
+  <app-manual-adding-component></app-manual-adding-component>
+}
+
+<hr/>
+
+  @for (item of library(); track item.id) {
+    <div class = "library_card">
+      <b>{{ item.game.title }}</b> - {{ item.status }}
+
+      <div>
+        <button type="button" (click)="update(item, 'want')">Want</button>
+        <button type="button" (click)="update(item, 'playing')">Playing</button>
+        <button type="button" (click)="update(item, 'played')">Played</button>
+        <button type="button" (click)="delete(item.id)">Delete</button>
+      </div>
+    </div>
+  }

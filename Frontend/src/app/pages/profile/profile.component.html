@@ -1,0 +1,28 @@
+<h2>Profile</h2>
+<p><img src = "{{profile()?.avatar}}" alt = "ava"></p>
+
+<p><b>Username:</b> {{ profile()?.username }} </p>
+<p><b>Bio:</b> {{ profile().bio }} </p>
+
+<button (click)="load()">Refresh</button>
+<button (click)="logout()">Logout</button>
+<button class="update" (click)='settings()'>Settings</button>
+@if (setting()) {
+  <form>
+    Username:<input name = 'usrname' type="text" placeholder="Username" value='{{profile()?.username}}' [(ngModel)]="this.username">
+    Bio:<input name = 'bio' type="text" placeholder="bio" [(ngModel)] = "this.bio">
+    PFP:<input name = 'pfp' type="text" placeholder="profile picture" [(ngModel)] = "this.pfp">
+    <div>
+      <input name = "visibility" type = "radio" [(ngModel)] = 'is_public' value = "{{true}}" checked (click)="Show()">Visible
+      <input name = "visibility" type = "radio" [(ngModel)] = 'is_public' value = "{{false}}" (click)="Show()">Invisible
+    </div>
+    <button (click)="updateProfile()">Apply</button>
+  </form>
+}
+
+<h3>My Library</h3>
+<ul>
+  @for (item of library(); track item.id) {
+    <li>{{ item.game.title }} - {{ item.status }}</li>
+  }
+</ul>

@@ -49,4 +49,8 @@ export class ApiService {
   putMyProfile(data: any) {
     return this.http.put(this.baseURL + 'profile/me/', data);
   }
+
+  searchProfile(query: string) {
+    return this.http.get(`${this.baseURL}/profile/search/?q=${query}`);
+  }
 }
