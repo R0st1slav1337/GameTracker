@@ -51,6 +51,10 @@ export class ApiService {
   }
 
   searchProfile(query: string) {
-    return this.http.get(`${this.baseURL}/profile/search/?q=${query}`);
+    return this.http.get(`${this.baseURL}profile/search/?q=${query}`);
+  }
+
+  getUserProfile(username: string) {
+    return this.http.get(`${this.baseURL}profile/${username}/`);
   }
 }

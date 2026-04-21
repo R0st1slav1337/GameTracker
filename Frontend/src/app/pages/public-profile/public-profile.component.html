@@ -1,0 +1,30 @@
+<div class="public-profile-page">
+  <button type="button" class="back-btn" (click)="goBack()">Back to my profile</button>
+
+  <h2>User Profile</h2>
+
+  @if (loading()) {
+    <p>Loading profile...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{error()}}</p>
+  }
+
+  @if (!loading() && profile()) {
+    <div class="profile-card">
+      @if (profile().avatar) {
+        <img
+          [src]="profile().avatar"
+          [alt]="profile().username"
+          class="avatar"
+        />
+      }
+
+      <p><b>Username:</b> {{profile().username}}</p>
+      <p><b>Bio:</b> {{profile().bio || 'No bio yet'}}</p>
+      <p><b>Public:</b> {{profile().is_public ? 'Yes' : 'No'}}</p>
+    </div>
+  }
+
+</div>

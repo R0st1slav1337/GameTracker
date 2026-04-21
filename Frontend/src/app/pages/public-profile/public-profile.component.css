@@ -1,0 +1,30 @@
+.public-profile-page {
+  padding: 20px;
+}
+
+.back-btn {
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.profile-card {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  max-width: 420px;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+}

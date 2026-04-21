@@ -1,3 +1,30 @@
+<h3>Find other Users</h3>
+
+<input
+  type="text"
+  [(ngModel)]="searchQuery"
+  (input)="searchProfiles()"
+  placeholder="Search by username"
+/>
+
+<button type="button" (click)="clearSearch()">Clear</button>
+
+@if (searchError()) {
+  <p>{{ searchError() }}</p>
+}
+
+@if (searchResults().length > 0) {
+  <div class="search-results">
+    @for (user of searchResults(); track user.username) {
+      <div class="search-result-item">
+        <button type="button" (click)="openProfile(user.username)">{{user.username}}</button>
+      </div>
+    }
+  </div>
+}
+
+<hr>
+
 <h2>Profile</h2>
 <p><img src = "{{profile()?.avatar}}" alt = "ava"></p>
 
