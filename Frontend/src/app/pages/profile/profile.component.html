@@ -1,84 +1,124 @@
-<h3>Find other Users</h3>
+<div class="profile-page">
 
-<input
-  type="text"
-  [(ngModel)]="searchQuery"
-  (input)="searchProfiles()"
-  placeholder="Search by username"
-/>
+  <div class="search-panel">
+    <h3>Find other users</h3>
 
-<button type="button" (click)="clearSearch()">Clear</button>
+    <div class="search-row">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (input)="searchProfiles()"
+        placeholder="Search by username"
+      />
+      <button type="button" class="secondary" (click)="clearSearch()">Clear</button>
+    </div>
 
-@if (searchError()) {
-  <p>{{ searchError() }}</p>
-}
+    @if (searchError()) {
+      <p class="empty-text">{{searchError()}}</p>
+    }
 
-@if (searchResults().length > 0) {
-  <div class="search-results">
-    @for (user of searchResults(); track user.username) {
-      <div class="search-result-item">
-        <button type="button" (click)="openProfile(user.username)">{{user.username}}</button>
+    @if (searchResults().length > 0) {
+      <div class="search-results">
+        @for (user of searchResults(); track user.username) {
+          <button
+            type="button"
+            class="search-user-btn"
+            (click)="openProfile(user.username)"
+          >{{user.username}}</button>
+        }
       </div>
     }
+
   </div>
-}
 
-<hr>
+  <div class="profile-card">
+    <div class="profile-top">
+      <div class="profile-info">
+        @if (profile()?.avatar) {
+          <img
+            [src]="profile()?.avatar"
+            [alt]="profile()?.username"
+            class="profile-avatar"
+          />
+        }
 
-<h2>Profile</h2>
-<p><img src = "{{profile()?.avatar}}" alt = "ava"></p>
+        <div class="profile-meta">
+          <h2>My Profile</h2>
+          <p><b>Username:</b> {{ profile()?.username }}</p>
+          <p><b>Bio:</b> {{ profile()?.bio || 'No bio yet' }}</p>
+          <p><b>Visibility:</b> {{ profile()?.is_public ? 'Public' : 'Private' }}</p>
+        </div>
+      </div>
 
-<p><b>Username:</b> {{ profile()?.username }} </p>
-<p><b>Bio:</b> {{ profile().bio }} </p>
-
-<button (click)="load()">Refresh</button>
-<button (click)="logout()">Logout</button>
-<button class="update" (click)='settings()'>Settings</button>
-
-@if (setting()) {
-  <div>
-    <p>Username:</p>
-    <input [(ngModel)]="username" type="text">
-
-    <p>Bio:</p>
-    <textarea [(ngModel)]="bio"></textarea>
-
-    <p>PFP:</p>
-    <input [(ngModel)]="pfp" type="text">
-
-    <div>
-      <button type="button" (click)="is_public = true">Visible</button>
-      <button type="button" (click)="is_public = false">Invisible</button>
+      <div class="profile-actions">
+        <button type="button" class="secondary" (click)="load()">Refresh</button>
+        <button type="button" class="secondary" (click)="settings()">Settings</button>
+        <button type="button" class="danger" (click)="logout()">Logout</button>
+      </div>
     </div>
-
-    <button type="button" (click)="updateProfile()">Apply</button>
   </div>
-}
 
-<h3>My Library</h3>
+  @if (setting()) {
+    <div class="settings-card">
+      <h3 class="section-title">Edit profile</h3>
 
-@if (library().length > 0) {
-  @for (item of library(); track item.id) {
-    <div>
-      <p><b>{{item.game.title}}</b> - {{item.status}}</p>
+      <div class="settings-grid">
+        <div>
+          <label>Username</label>
+          <input [(ngModel)]="username" type="text">
+        </div>
+        <div>
+          <label>Avatar URL</label>
+          <input [(ngModel)]="pfp" type="text">
+        </div>
+        <div style="grid-column: 1 / -1;">
+          <label>Bio</label>
+          <textarea [(ngModel)]="bio" rows="4"></textarea>
+        </div>
+      </div>
+
+      <div class="visibility-row">
+        <button type="button" class="secondary" (click)="is_public = true">Public</button>
+        <button type="button" class="secondary" (click)="is_public = false">Private</button>
+        <button type="button" (click)="updateProfile()">Apply changes</button>
+      </div>
     </div>
   }
-} @else {
-  <p>No games in library yet.</p>
-}
 
+  <div class="grid-2">
+    <div class="library-card">
+      <h3 class="section-title">My Library</h3>
 
-<h3>My Reviews</h3>
-
-@if (reviews().length > 0) {
-  @for (review of reviews(); track review.id) {
-    <div>
-      <p><b>{{review.game_title}}</b></p>
-      <p>Rating: {{review.rating}}</p>
-      <p>{{review.text}}</p>
-      <hr>
+      @if (library().length > 0) {
+        <div class="list-block">
+          @for (item of library(); track item.id) {
+            <div class="library-item">
+              <p><b>{{item.game.title}}</b></p>
+              <p class="muted">Status: {{item.status}}</p>
+            </div>
+          }
+        </div>
+      } @else {
+        <p class="empty-text">No games in library yet.</p>
+      }
     </div>
-  }
-} @else {
-  <p>No reviews yet.</p>
-}
+
+    <div class="reviews-card">
+      <h3 class="section-title">My Reviews</h3>
+      @if (reviews().length > 0) {
+        <div class="list-block">
+          @for (review of reviews(); track review.id) {
+            <div class="review-item">
+              <p><b>{{review.game_title}}</b></p>
+              <p class="muted">Rating: {{review.rating}}</p>
+              <p>{{review.text}}</p>
+            </div>
+          }
+        </div>
+      } @else {
+        <p class="empty-text">No reviews yet.</p>
+      }
+    </div>
+  </div>
+
+</div>

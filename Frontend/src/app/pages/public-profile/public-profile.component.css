@@ -1,30 +1,51 @@
 .public-profile-page {
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .back-btn {
-  margin-bottom: 16px;
-  cursor: pointer;
+  align-self: flex-start;
 }
 
-.profile-card {
-  margin-top: 16px;
-  padding: 16px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  max-width: 420px;
+.profile-card,
+.public-library-card,
+.public-reviews-card {
+  background-color: rgba(17,24,39,0.9);
+  border: 1px solid #334155;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.22);
+}
+
+.profile-header {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .avatar {
-  width: 120px;
-  height: 120px;
+  width: 110px;
+  height: 110px;
   object-fit: cover;
   border-radius: 50%;
-  display: block;
-  margin-bottom: 16px;
+  border: 3px solid #60a5fa;
+  background-color: #0b1220;
 }
 
 .error {
-  color: red;
+  color: #f87171;
   font-weight: bold;
+}
+
+.public-item {
+  background-color: #0b1220;
+  border: 1px solid #263244;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.public-item p {
+  margin: 6px 0;
 }

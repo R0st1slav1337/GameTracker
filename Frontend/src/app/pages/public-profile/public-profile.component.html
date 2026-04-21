@@ -1,5 +1,5 @@
 <div class="public-profile-page">
-  <button type="button" class="back-btn" (click)="goBack()">Back to my profile</button>
+  <button type="button" class="back-btn secondary" (click)="goBack()">Back to my profile</button>
 
   <h2>User Profile</h2>
 
@@ -13,43 +13,56 @@
 
   @if (!loading() && profile()) {
     <div class="profile-card">
-      @if (profile().avatar) {
-        <img
-          [src]="profile().avatar"
-          [alt]="profile().username"
-          class="avatar"
-        />
-      }
+      <div class="profile-header">
+        @if (profile().avatar) {
+          <img
+            [src]="profile().avatar"
+            [alt]="profile().username"
+            class="avatar"
+          />
+        }
 
-      <p><b>Username:</b> {{profile().username}}</p>
-      <p><b>Bio:</b> {{profile().bio || 'No bio yet'}}</p>
-      <p><b>Public:</b> {{profile().is_public ? 'Yes' : 'No'}}</p>
+        <div>
+          <p><b>Username:</b> {{profile().username}}</p>
+          <p><b>Bio:</b> {{profile().bio || 'No bio yet'}}</p>
+          <p><b>Public:</b> {{profile().is_public ? 'Yes' : 'No'}}</p>
+        </div>
+      </div>
     </div>
+    <div class="grid-2">
+      <div class="public-library-card">
+        <h3>User Library</h3>
+        @if (library().length > 0 ) {
+          <div class="list-block">
+            @for (item of library(); track item.id) {
+              <div class="public-item">
+                <p><b>{{item.game.title}}</b>/p>
+                <p class="muted">Status: {{item.status}}</p>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="muted">No games in library</p>
+        }
+      </div>
 
-    <h3>User Library</h3>
-    @if (library().length > 0 ) {
-      @for (item of library(); track item.id) {
-        <div>
-          <p><b>{{item.game.title}}</b> - {{item.status}}</p>
-        </div>
-      }
-    } @else {
-      <p>No games in library</p>
-    }
+      <div class="public-reviews-card">
+        <h3>User Reviews</h3>
 
-    <h3>User Reviews</h3>
-    @if (reviews().length > 0) {
-      @for (review of reviews(); track review.id) {
-        <div>
-          <p><b>{{review.game_title}}</b></p>
-          <p>Rating: {{review.rating}}</p>
-          <p>{{review.text}}</p>
-          <hr>
-        </div>
-      }
-    } @else {
-      <p>No reviews yet.</p>
-    }
+        @if (reviews().length > 0) {
+          <div class="list-block">
+            @for (review of reviews(); track review.id) {
+              <div class="public-item">
+                <p><b>{{review.game_title}}</b></p>
+                <p class="muted">Rating: {{review.rating}}</p>
+                <p>{{review.text}}</p>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="muted">No reviews yet.</p>
+        }
+      </div>
+    </div>
   }
-
 </div>
