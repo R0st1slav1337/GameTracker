@@ -50,11 +50,28 @@ export class ApiService {
     return this.http.put(this.baseURL + 'profile/me/', data);
   }
 
+  // search users
   searchProfile(query: string) {
     return this.http.get(`${this.baseURL}profile/search/?q=${query}`);
   }
 
+  // public profile
   getUserProfile(username: string) {
     return this.http.get(`${this.baseURL}profile/${username}/`);
+  }
+
+  // public library by username
+  getUserLibrary(username: string) {
+    return this.http.get(`${this.baseURL}profile/${username}/library/`);
+  }
+
+  // public reviews by username
+  getUserReviews(username: string) {
+    return this.http.get(`${this.baseURL}profile/${username}/reviews/`);
+  }
+
+  // own reviews
+  getMyReviews(username: string) {
+    return this.http.get(`${this.baseURL}profile/${username}/reviews/`);
   }
 }

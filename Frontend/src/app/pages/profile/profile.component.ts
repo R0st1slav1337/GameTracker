@@ -17,6 +17,7 @@ import {Router} from '@angular/router';
 export class ProfileComponent {
   profile = signal<any>('');
   library = signal<LibraryResponse[]>([]);
+  reviews = signal<any[]>([]);
   setting = signal<boolean>(false)
 
   username: string = '';
@@ -32,7 +33,6 @@ export class ProfileComponent {
 
   ngOnInit() {
     this.load();
-    this.loadLibrary();
   }
 
 
@@ -44,6 +44,9 @@ export class ProfileComponent {
         this.bio = data.bio;
         this.pfp = data.pfp;
         this.is_public = data.is_public;
+
+        this.loadLibrary();
+        this.loadReviews();
       },
       error: () => {
         alert('Failed to load profile');
@@ -52,9 +55,29 @@ export class ProfileComponent {
   }
 
   loadLibrary() {
-    this.api.getLibrary().subscribe((data: any)=> {
-      this.library.set(data);
-    })
+    if (!this.username) return;
+
+    this.api.getUserLibrary(this.username).subscribe({
+      next: (data: any) => {
+        this.library.set(data);
+      },
+      error: () => {
+        this.library.set([]);
+      }
+    });
+  }
+
+  loadReviews() {
+    if (!this.username) return;
+
+    this.api.getUserReviews(this.username).subscribe({
+      next: (data: any) => {
+        this.reviews.set(data);
+      },
+      error: () => {
+        this.reviews.set([])
+      }
+    });
   }
 
   logout() {

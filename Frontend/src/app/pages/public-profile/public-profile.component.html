@@ -25,6 +25,31 @@
       <p><b>Bio:</b> {{profile().bio || 'No bio yet'}}</p>
       <p><b>Public:</b> {{profile().is_public ? 'Yes' : 'No'}}</p>
     </div>
+
+    <h3>User Library</h3>
+    @if (library().length > 0 ) {
+      @for (item of library(); track item.id) {
+        <div>
+          <p><b>{{item.game.title}}</b> - {{item.status}}</p>
+        </div>
+      }
+    } @else {
+      <p>No games in library</p>
+    }
+
+    <h3>User Reviews</h3>
+    @if (reviews().length > 0) {
+      @for (review of reviews(); track review.id) {
+        <div>
+          <p><b>{{review.game_title}}</b></p>
+          <p>Rating: {{review.rating}}</p>
+          <p>{{review.text}}</p>
+          <hr>
+        </div>
+      }
+    } @else {
+      <p>No reviews yet.</p>
+    }
   }
 
 </div>
