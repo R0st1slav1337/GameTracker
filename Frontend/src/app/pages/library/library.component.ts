@@ -8,28 +8,7 @@ import {ManualAddingComponent} from './manual-adding.component/manual-adding.com
   selector: 'app-library',
   standalone: true,
   imports: [FormsModule, ManualAddingComponent],
-  template: `
-    <h2>My Library</h2>
-    <button (click) = "toggleManual()">Haven't found your favorite game? Add it here!</button>
-    @if(manual()){
-      <app-manual-adding-component [open]="manual()"  (success) = 'load()'></app-manual-adding-component>
-    }
-    <div class = "games">
-      @for (item of library(); track item.game) {
-        <div class = "library_card">
-          {{ item.game.title }} - {{ item.status }}
-            <img class = "game_image" src = "{{item.game.image}}">
-
-          <select [(ngModel)]="item.status" (change)="update(item)">
-            <option value="want">Want</option>
-            <option value="playing">Playing</option>
-            <option value="played">Played</option>
-          </select>
-          <button (click)="delete(item.id)">Delete</button>
-        </div>
-      }
-    </div>
-  `,
+  templateUrl: './library.component.html',
   styleUrl: "./library.component.css"
 })
 
@@ -67,12 +46,18 @@ export class LibraryComponent {
     });
   }
 
-  update(item: any) {
-    this.api.updateLibrary(item.id, { status: item.status }).subscribe();
+  update(item: any, newStatus: 'want' | 'playing' | 'played') {
+    this.api.updateLibrary(item.id, { status: newStatus }).subscribe({
+      next: () => this.load(),
+      error: () => alert('Failed to update status'),
+    });
   }
 
   delete(id: number) {
-    this.api.deleteLibrary(id).subscribe(() => this.load());
+    this.api.deleteLibrary(id).subscribe({
+      next: () => this.load(),
+      error: () => alert('Failed to delete game'),
+    });
   }
 
   toggleManual() {
