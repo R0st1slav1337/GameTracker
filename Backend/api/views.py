@@ -309,6 +309,24 @@ class UserLibraryView(APIView):
         items = Library.objects.filter(user=user)
         serializer = LibrarySerializer(items, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class ProfileSearchView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        query = request.GET.get('q', '').strip()
+
+        if not query:
+            return Response([])
+        
+        users = User.objects.filter(username__icontains=query)[:10]
+        profiles = [user.profile for user in users if hasattr(user, 'profile')]
+
+        serializer = ProfileSerializer(profiles, many = True)
+        return Response(serializer.data)
+
+
 # Get list of games in user library or add game to library
 class LibraryListCreate(APIView):
     permission_classes = [IsAuthenticated]
@@ -343,12 +361,26 @@ class LibraryDetail(APIView):
         if item.user != request.user:
             return Response({'error': 'Forbidden'}, status=status.HTTP_403_FORBIDDEN)
         
-        serializer = LibrarySerializer(item, data = request.data)
-        if serializer.is_valid():
-            serializer.save(user=item.user)
-            return Response(serializer.data)
+        new_status = request.data.get('status')
+
+        if new_status is None:
+            return Response(
+                {'error': 'status is required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        valid_statuses = [choice[0] for choice in Library.STATUS_CHOICES]
+        if new_status not in valid_statuses:
+            return Response(
+                {'error': 'Invalid status'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        item.status = new_status
+        item.save()
+
+        serializer = LibrarySerializer(item)        
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     def delete(self, request, pk):
         item = self.get_object(pk)

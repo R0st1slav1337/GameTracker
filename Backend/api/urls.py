@@ -15,6 +15,7 @@ urlpatterns = [
     path('reviews/<int:pk>/', ReviewDetail.as_view()),
 
     path('profile/me/', MyProfileView.as_view()),
+    path('profile/search/', ProfileSearchView.as_view()),
     path('profile/<str:username>/', get_profile),
     path('profile/<str:username>/reviews/', UserReviewView.as_view()),
     path('profile/<str:username>/library/', UserLibraryView.as_view()),
