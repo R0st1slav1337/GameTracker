@@ -11,10 +11,12 @@ class GameSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source = 'user.username')
+    game_title = serializers.ReadOnlyField(source = 'game.title')
+    game_rawg_id = serializers.ReadOnlyField(source = 'game.rawg_id')
 
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = ['id', 'user', 'game', 'game_title', 'game_rawg_id', 'text', 'rating']
 
 class ReviewCreateSerializer(serializers.Serializer):
     rawg_id = serializers.IntegerField()
