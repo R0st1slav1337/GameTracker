@@ -105,7 +105,8 @@ export class ProfileComponent {
     const data = {
       username: this.username,
       bio: this.bio,
-      avatar: this.pfp
+      avatar: this.pfp,
+      is_public: this.is_public,
     };
 
     this.api.putMyProfile(data).subscribe({
