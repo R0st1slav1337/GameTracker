@@ -104,3 +104,31 @@ textarea {
   height: 80px;
   margin-top: 10px;
 }
+
+:host {
+  display: block;
+  color: var(--text);
+}
+
+.reviews-section h3,
+.reviews-section h4 {
+  color: var(--text);
+}
+
+.review {
+  color: var(--text);
+  background-color: #0b1220;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+textarea,
+input {
+  background-color: #0b1220;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+textarea::placeholder {
+  color: var(--muted);
+}

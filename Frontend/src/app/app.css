@@ -1,27 +1,5 @@
-:root {
-  --bg: #0f172a;
-  --bg-secondary: #1e293b;
-  --card: #111827;
-  --card-light: #1f2937;
-  --text: #e5e7eb;
-  --muted: #94a3b8;
-  --accent: #60a5fa;
-  --accent-hover: #3b82f6;
-  --danger: #ef4444;
-  --border: #334155;
-  --success: #22c55e;
-}
-
 * {
   box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
-  color: var(--text);
-  min-height: 100vh;
 }
 
 .navbar {
@@ -119,6 +97,11 @@ select:focus {
 
 h1, h2, h3 {
   margin-top: 0;
+  color: var(--text);
+}
+
+p, div, label, a {
+  color: var(--text);
 }
 
 section,

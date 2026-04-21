@@ -1,24 +1,47 @@
-<h2>My Library</h2>
+<div class="container">
+  <h2>My Library</h2>
 
-<button type="button" (click) = "toggleManual()">
-  {{ manual() ? 'Hide manual form' : 'Haven\'t found your favorite game? Add it here!'}}
-</button>
+  <button type="button" (click)="toggleManual()">
+    {{ manual() ? "Hide manual form" : "Haven't found your favorite game? Add it here!" }}
+  </button>
 
-@if (manual()) {
-  <app-manual-adding-component></app-manual-adding-component>
-}
-
-<hr/>
-
-  @for (item of library(); track item.id) {
-    <div class = "library_card">
-      <b>{{ item.game.title }}</b> - {{ item.status }}
-
-      <div>
-        <button type="button" (click)="update(item, 'want')">Want</button>
-        <button type="button" (click)="update(item, 'playing')">Playing</button>
-        <button type="button" (click)="update(item, 'played')">Played</button>
-        <button type="button" (click)="delete(item.id)">Delete</button>
-      </div>
+  @if (manual()) {
+    <div style="margin-top: 20px;">
+      <app-manual-adding-component></app-manual-adding-component>
     </div>
   }
+
+  <hr>
+
+  @if (library().length > 0) {
+    <div class="games">
+      <div class="library_card">
+        @for (item of library(); track item.id) {
+          @if (item.game?.image) {
+            <img
+              class="game_image"
+              [src]="item.game.image"
+              [alt]="item.game.title"
+            />
+          }
+
+          <div class="library_content">
+            <h3>{{item.game.title}}</h3>
+
+            <p class="muted">Status: {{item.status}}</p>
+
+            <div class="library_actions">
+              <button type="button" class="status-btn" (click)="update(item, 'want')">Want</button>
+              <button type="button" class="status-btn" (click)="update(item, 'playing')">Playing</button>
+              <button type="button" class="status-btn" (click)="update(item, 'played')">Played</button>
+              <button type="button" class="delete-btn" (click)=delete(item.id)>Delete</button>
+            </div>
+          </div>
+        }
+      </div>
+
+    </div>
+  } @else {
+    <p class="muted">Your Library is empty.</p>
+  }
+</div>
